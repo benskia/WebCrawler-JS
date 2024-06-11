@@ -4,7 +4,7 @@
   "description": "A CLI tool generate a report of the internal linking structure of a website.",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "node --no-warnings main.js",
     "test": "jest"
   },
   "author": "",
