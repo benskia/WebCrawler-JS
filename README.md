@@ -1,3 +1,4 @@
 # WebCrawler
 
-A CLI tool generate a report of the internal linking structure of a website.
+A CLI tool that crawls a given URL, creating a report from the internal link
+structure of the website.
