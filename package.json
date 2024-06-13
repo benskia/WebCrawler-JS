@@ -1,0 +1,18 @@
+{
+  "name": "webcrawler",
+  "version": "1.0.0",
+  "description": "A CLI tool that crawls a given URL, creating a report from the internal link structure of the website.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "jsdom": "^24.1.0"
+  }
+}
