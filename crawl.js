@@ -1,8 +1,27 @@
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-async function crawlPage(currentURL) {
+async function crawlPage(baseURL, currentURL = baseURL, pages = {}) {
+  // We're only crawling the targeted host (baseURL).
+  const baseURLObj = new URL(baseURL)
+  const currentURLObj = new URL(currentURL)
+  if (baseURL.hostname !== currentURL.hostname) {
+    return pages
+  }
+
+  // We want to track repeat URLs for our report, but we don't want to re-crawl.
+  const normalizedCurrentURL = normalizeURL(currentURL)
+  if (pages[normalizedCurrentURL] > 0) {
+    pages[normalizedCurrentURL]++
+    return pages
+  }
+  pages[normalizedCurrentURL] = 1
+
   console.log(`Crawling: ${currentURL}`)
+  fetchURLs(currentURL)
+}
+
+async function fetchURLs(currentURL) {
   try {
     const response = await fetch(currentURL)
     const status = response.status
@@ -11,20 +30,21 @@ async function crawlPage(currentURL) {
       return
     }
     const contentType = response.headers.get('Content-Type')
-    if (contentType !== 'text/html; charset=utf-8') {
+    if (!contentType.includes('text/html')) {
       console.log(`Error in fetch with Content-Type: ${contentType} on page: ${currentURL}`)
       return
     }
-    console.log(await response.text())
+    const htmlBody = response.text()
+    const urls = getURLsFromHTML(htmlBody, currentURL)
   } catch (error) {
     console.log(`Error in fetch: ${error.message} on page: ${currentURL}`)
   }
 }
 
 function getURLsFromHTML(htmlBody, baseURL) {
+  const links = []
   const dom = new JSDOM(htmlBody)
   const anchorTags = dom.window.document.querySelectorAll('a')
-  const links = []
   for (const anchorTag of anchorTags) {
     if (anchorTag.href.slice(0, 1) === '/') {
       // relative link
