@@ -11,7 +11,10 @@ function main() {
   }
   const baseURL = process.argv[2]
   console.log(`Starting crawl at ${baseURL}`)
-  crawlPage(baseURL)
+  const pages = crawlPage(baseURL)
+  for (const page of Object.entries(pages)) {
+    console.log(page)
+  }
 }
 
 main()
