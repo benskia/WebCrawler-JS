@@ -1,20 +1,23 @@
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-async function crawlPage(baseURL) {
+async function crawlPage(currentURL) {
+  console.log(`Crawling: ${currentURL}`)
   try {
-    const response = await fetch(baseURL)
-    if (response.status > 399) {
-      console.log(`Fetch recieved error: ${response.status}`)
+    const response = await fetch(currentURL)
+    const status = response.status
+    if (status > 399) {
+      console.log(`Error in fetch with status code: ${status} on page: ${currentURL}`)
       return
     }
-    if (response.headers.get('Content-Type') !== 'text/html') {
-      console.log(`Fetch received Content-Type: ${response.headers.get('Content-Type')}`)
+    const contentType = response.headers.get('Content-Type')
+    if (contentType !== 'text/html; charset=utf-8') {
+      console.log(`Error in fetch with Content-Type: ${contentType} on page: ${currentURL}`)
       return
     }
-    console.log(`${response.body}`)
+    console.log(await response.text())
   } catch (error) {
-    console.log(`Fetch error: ${error}`)
+    console.log(`Error in fetch: ${error.message} on page: ${currentURL}`)
   }
 }
 

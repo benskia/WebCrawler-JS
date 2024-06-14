@@ -1,3 +1,5 @@
+const { crawlPage } = require('./crawl.js')
+
 function main() {
   if (process.argv.length < 3) {
     console.log("Too few arguments: 'npm run BASE_URL'")
@@ -7,7 +9,9 @@ function main() {
     console.log("Too many arguments: 'npm run BASE_URL'")
     process.exit()
   }
-  console.log(`Starting crawl at ${process.argv[2]}`)
+  const baseURL = process.argv[2]
+  console.log(`Starting crawl at ${baseURL}`)
+  crawlPage(baseURL)
 }
 
 main()
